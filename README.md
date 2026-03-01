@@ -48,15 +48,47 @@ The server uses HTTP header-based authentication with Atlassian API tokens. Cred
 - `x-atlassian-email`: Your Atlassian account email
 - `x-atlassian-api-token`: Your Atlassian API token
 
-## Getting Started
+## Setup and Usage
 
-### Starting the Server
+There are two main ways to run the MCP server: manually for local development, or containerized with Docker.
+
+### Manual (local development)
+
+1. Ensure dependencies are installed:
+
+```bash
+poetry install
+```
+
+2. Provide `CONFLUENCE_BASE_URL` via a `.env` file or environment variable (see Configuration above).
+
+3. Start the server:
 
 ```bash
 poetry run python main.py
 ```
 
-The server will start on `http://0.0.0.0:8000/mcp`
+The server will start on `http://0.0.0.0:8000/mcp`.
+
+### Docker (containerized)
+
+Build and run using Docker (recommended for isolated testing):
+
+```bash
+docker build -t atlassian-api-mcp .
+docker run --env-file .env -p 8000:8000 atlassian-api-mcp
+```
+
+Alternately, use the included `Makefile` targets:
+
+```bash
+make build
+make run            # uses .env file
+```
+
+Notes:
+- The server requires `CONFLUENCE_BASE_URL` to be present at startup. Provide it via `.env` or `-e`/`--env-file` when running the container.
+- MCP clients must pass `x-atlassian-email` and `x-atlassian-api-token` headers with requests.
 
 ### Obtaining an Atlassian API Token
 
